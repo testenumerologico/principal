@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Numerológico</title>
+    <style>
+        body {
+
+            font-family: Arial, sans-serif;
+            color: white;
+            height: 100vh;
+            max-height: 100vh;
+            width: 100vw;
+            max-width: 100vw;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            background-image: url('imgs/bg.jpg');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        #logo{
+            display: block;
+            padding: 10px;
+            width: 300px;
+        }
+        #textHeader{
+            width: 70vw;
+            text-align: center;
+        }
+        #textHeader h1{
+            padding: 0;
+            margin: 0;
+            margin-top: 10px;
+            font-size: 1.5em;
+        }
+        #textHeader h2{
+            font-size: 1.2em;
+            font-weight: 100;
+            margin-top: 20px;
+        }
+
+        #numerologyForm{  
+            display: block;          
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 30px 10px 30px 10px;
+            
+            width: 30vw;
+            border-radius: 10px;
+        }
+
+        #result {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .result-section {
+            display: none;
+            margin-bottom: 40px;
+        }
+        .active {
+            display: block;
+        }
+        form {
+            display: inline-block;
+            text-align: left;
+        }
+
+        input{
+            margin-top: 5px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        input[type="text"] {
+            text-align: center;
+              width: 235px;
+              height: 30px;              
+        }
+
+        input[type="number"] {
+            width: 60px;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        button[type="submit"]{
+            background-color: #de6eff;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font: inherit; 
+            cursor: pointer;
+            padding: 10px 20px 10px 20px;
+        }
+        button[type="submit"]:hover{
+            background-color: white;
+            color: #de6eff;            
+        }
+        .seuNumeroE{
+            font: inherit;
+            font-size: 1.2em;
+        }
+        .large-bold {
+            font-size: 7.5em;
+            font-weight: bold;
+        }
+        .sectionDescription{
+            font: inherit;
+            font-size: 1.2em;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        } 
+        #captions {
+            display: none;
+            width: 50vw;
+            font-size: 1.2em;
+            margin-top: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 10px 5px 10px 5px;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+            min-height: 1.5em; /* Espaço reservado para as legendas */
+            position: absolute;
+            bottom: 70px;
+        }
+        #controls {
+            margin-top: 10px;
+        }
+        #pauseButton, #resumeButton {
+            width: 30px;
+            cursor: pointer;
+            display: none; /* Inicialmente escondido */
+        }
+        .imgControl{
+            border-radius: 5px;
+            position: absolute;
+            bottom: 0px;
+            left: 50%;
+            transform: translate(-50%, -50%)
+        }
+        #boxUnlockButton {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        #unlockButton {
+            padding: 10px 20px;
+            font-size: 1em;
+            margin-top: 20px;
+            cursor: pointer;
+            background-color: #ffca2c;
+            color: black;
+            border-radius: 10px;
+            border: 0;
+            animation: zoom 0.5s infinite alternate;
+
+        }
+        #unlockButton:hover {
+            background-color: black;
+            color: #ffca2c;
+        }
+
+        #boxCircle {
+            display: none;
+            opacity: 0;
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 1s ease-in-out;
+            overflow: hidden;
+        }
+
+        #circulo {
+            animation: rotacionar 20s infinite linear;
+            width: 25vw;
+            
+        }
+
+        /* Animações */
+
+        @keyframes rotacionar {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        @keyframes zoom {
+              0% {
+                transform: scale(1);
+              }
+              100% {
+                transform: scale(1.1);
+              }
+            }
+
+        /* Aqui você colocará os estilos específicos para telas menores */
+        @media (max-width: 768px) {
+            #logo    {
+                width: 70vw;
+            }  
+
+            #numerologyForm{              
+                width: 70vw;
+            }
+
+            #textHeader h1{
+                font-size: 1.2em;
+            }
+            #textHeader h2{
+                font-size: 0.9em;
+            }
+            #boxCircle {
+                top: 53%;
+            }
+            #circulo {
+              width: 93vw;
+            }
+            #captions {
+                width: 90vw;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <img id="logo" src="imgs/logo.png">
+    <div id="textHeader">
+        <h1>Descubra o significado NUMEROLÓGICO do seu nome e do dia que nasceu</h1>
+        <h2>Preencha os campos abaixo para receber sua leitura numerológica 100% grátis</h2>
+    </div>
+    <form id="numerologyForm">
+        <label for="fullName">Nome Completo:</label>
+        <input type="text" id="fullName" name="fullName" placeholder="Escreva Seu Nome Completo" required><br><br>
+
+        <label>Data de Nascimento:</label>
+        <input type="number" id="birthDay" name="birthDay" placeholder="Dia" min="1" max="31" required>
+        <input type="number" id="birthMonth" name="birthMonth" placeholder="Mês" min="1" max="12" required>
+        <input type="number" id="birthYear" name="birthYear" placeholder="Ano" min="1900" max="2100" required><br><br>
+
+        <button type="submit">COMEÇAR</button>
+    </form>
+    <div id="result">
+        <!-- Seções de resultados -->
+        <div class="result-section" id="lifePathSection">
+            <h3 id="lifePathSectionTitle"></h3>
+            <p id="lifePathSectionIntro" class="seuNumeroE"></p>
+            <p id="lifePathNumberText"></p>
+            <p id="lifePathSectionNumberDisplay" class="large-bold"></p>
+            <p id="lifePathSectionDescription" class="sectionDescription"></p>
+        </div>
+
+        <div class="result-section" id="expressionSection">
+            <h3 id="expressionSectionTitle"></h3>
+            <p id="expressionSectionIntro" class="seuNumeroE"></p>
+            <p id="expressionSectionNumberText"></p>
+            <p id="expressionSectionNumberDisplay" class="large-bold"></p>
+            <p id="expressionSectionDescription" class="sectionDescription"></p>
+        </div>
+
+        <div class="result-section" id="soulUrgeSection">
+            <h3 id="soulUrgeSectionTitle"></h3>
+            <p id="soulUrgeSectionIntro" class="seuNumeroE"></p>
+            <p id="soulUrgeSectionNumberText"></p>
+            <p id="soulUrgeSectionNumberDisplay" class="large-bold"></p>
+            <p id="soulUrgeSectionDescription" class="sectionDescription"></p>
+        </div>
+
+        <div class="result-section" id="personalitySection">
+            <h3 id="personalitySectionTitle"></h3>
+            <p id="personalitySectionIntro" class="seuNumeroE"></p>
+            <p id="personalitySectionNumberText"></p>
+            <p id="personalitySectionNumberDisplay" class="large-bold"></p>
+            <p id="personalitySectionDescription" class="sectionDescription"></p>
+        </div>
+        <div id="boxCircle">
+            <img id="circulo" src="imgs/circulo1.png">
+        </div>
+    </div>
+
+    <div id="captions" class="captions"></div>
+    <div id="controls">
+        <img id="pauseButton" class="imgControl" src="imgs/pause.jpg" alt="Pausar">
+        <img id="resumeButton" class="imgControl" src="imgs/play.jpg" alt="Retomar">
+    </div>
+    <div id="boxUnlockButton">
+        <button id="unlockButton">DESBLOQUEAR MINHA PROSPERIDADE</button>
+    </div>
+    <script>
+        const letterToNumber = {
+            A: 1, J: 1, S: 1,
+            B: 2, K: 2, T: 2,
+            C: 3, L: 3, U: 3,
+            D: 4, M: 4, V: 4,
+            E: 5, N: 5, W: 5,
+            F: 6, O: 6, X: 6,
+            G: 7, P: 7, Y: 7,
+            H: 8, Q: 8, Z: 8,
+            I: 9, R: 9
+        };
+
+        const numerologyDescriptions = {
+            lifePath: {
+                1: "Líder nato, independente e ambicioso.",
+                2: "Diplomático, cooperativo e sensível.",
+                3: "Criativo, comunicativo e sociável.",
+                4: "Prático, organizado e trabalhador.",
+                5: "Aventureiro, versátil e livre.",
+                6: "Responsável, cuidadoso e amoroso.",
+                7: "Introspectivo, analítico e espiritual.",
+                8: "Ambicioso, eficiente e focado no sucesso.",
+                9: "Humanitário, idealista e compassivo.",
+                11: "Iluminado, intuitivo e visionário.",
+                22: "Mestre construtor, realiza grandes sonhos com estrutura.",
+                33: "Mestre altruísta, inspirador e servidor da humanidade."
+            },
+            expression: {
+                1: "Expressa-se com liderança e iniciativa.",
+                2: "Comunica-se com sensibilidade e cooperação.",
+                3: "Mostra criatividade e habilidades comunicativas.",
+                4: "Demonstra organização e disciplina.",
+                5: "Expressa-se de forma versátil e adaptável.",
+                6: "Comunica com responsabilidade e cuidado.",
+                7: "Expressa-se de maneira introspectiva e analítica.",
+                8: "Mostra ambição e foco no sucesso.",
+                9: "Comunica-se de forma humanitária e compassiva.",
+                11: "Expressa ideias visionárias e inspiradoras.",
+                22: "Comunica de maneira estruturada e impactante.",
+                33: "Expressa compaixão profunda e altruísmo."
+            },
+            soulUrge: {
+                1: "Deseja ser independente e líder.",
+                2: "Anseia por harmonia e parcerias.",
+                3: "Deseja expressar criatividade e alegria.",
+                4: "Anseia por estabilidade e ordem.",
+                5: "Deseja liberdade e aventura.",
+                6: "Anseia por amor e responsabilidade.",
+                7: "Deseja conhecimento e introspecção.",
+                8: "Anseia por sucesso material e poder.",
+                9: "Deseja contribuir para o bem comum.",
+                11: "Deseja iluminação espiritual e compreensão profunda.",
+                22: "Deseja construir algo grandioso e duradouro.",
+                33: "Deseja servir à humanidade de forma altruísta."
+            },
+            personality: {
+                1: "Projeção de liderança e iniciativa.",
+                2: "Projeção de sensibilidade e cooperação.",
+                3: "Projeção de criatividade e sociabilidade.",
+                4: "Projeção de organização e disciplina.",
+                5: "Projeção de versatilidade e adaptabilidade.",
+                6: "Projeção de responsabilidade e cuidado.",
+                7: "Projeção de introspecção e análise.",
+                8: "Projeção de ambição e eficiência.",
+                9: "Projeção de humanitarismo e compaixão.",
+                11: "Projeção de inspiração e intuição elevada.",
+                22: "Projeção de realização e construção de sonhos.",
+                33: "Projeção de altruísmo e serviço humanitário."
+            }
+        };
+
+        const sectionTexts = {
+            lifePath: [
+                "Este número reflete a essência do propósito de vida e as lições que a pessoa deve aprender ao longo da jornada.",
+                "Ele é calculado com base na data de nascimento e mostra as características fundamentais da personalidade, desafios e potencial de crescimento."
+            ],
+            expression: [
+                "O Número de Expressão revela os talentos inatos, habilidades e a maneira como uma pessoa se expressa no mundo.",
+                "Ele é calculado a partir do nome completo de nascimento e mostra os dons e o potencial de realização pessoal."
+            ],
+            soulUrge: [
+                "Também conhecido como 'Número do Coração', este número reflete os desejos mais profundos da alma, aquilo que uma pessoa realmente quer na vida, em um nível emocional e espiritual.",
+                "Ele é calculado a partir das vogais do nome completo."
+            ],
+            personality: [
+                "O Número da Personalidade reflete a maneira como a pessoa é percebida pelos outros.",
+                "Ele é calculado a partir das consoantes do nome completo e mostra a 'máscara' que a pessoa usa em interações sociais e como os outros a veem à primeira vista."
+            ]
+        };
+
+        const finalTexts = [
+            {
+                text: "Em sua jornada numerológica, vislumbrei um potencial imenso para a prosperidade. Seus números revelam uma alma sedenta por abundância e sucesso. No entanto, há energias que, como véus sutis, obscurecem seu caminho. Quero que você viva na abundância, que você merece e que é sua porque está no seu destino. Se você quer realmente viver em abundância e desbloquear sua vida de prosperidade, então clique no botão 'desbloquear minha prosperidade', você estará dando o primeiro passo para destravar e permitir que a prosperidade flua livremente em sua vida.",
+                audio: "audios/pros1.ogg"
+            },
+            {
+                text: "As cifras da sua vida numerológica indicam um futuro repleto de prosperidade. É como se um mapa do tesouro houvesse sido desenhado especialmente para você. No entanto, alguns obstáculos ocultos impedem que você alcance todo o seu potencial financeiro. Você já deve ter percebido, que às vezes parece que tem algo barrando você de prosperar. Porque realmente Tem. E se você deseja se livrar dessas barreiras e desbloquear a sua prosperidade, então clique no botão 'desbloquear minha prosperidade', você terá acesso a ferramentas poderosas para transformar sua vida financeira e alcançar a abundância que você merece.",
+                audio: "audios/pros2.ogg"
+            },
+            {
+                text: "Seu número é um guia espiritual que revela seus talentos, desafios e o caminho para a felicidade. Ao analisar sua numerologia, percebo que a prosperidade é um dos seus maiores desejos. No entanto, crenças limitantes e padrões de pensamentos negativos podem estar bloqueando seu fluxo de abundância. Para mudar isso agora, enquanto é possível, clique no botão 'desbloquear minha prosperidade' e você saberá de uma vez por todas o que fazer para criar a vida próspera que sempre sonhou.",
+                audio: "audios/pros3.ogg"
+            }
+        ];
+
+        let isPaused = false;
+        let currentAudio = null;
+        let captionSegments = [];
+        let currentCaptionIndex = 0;
+        let isFinalText = false;
+
+        const pauseButton = document.getElementById('pauseButton');
+        const resumeButton = document.getElementById('resumeButton');
+        const unlockButton = document.getElementById('boxUnlockButton');
+
+        // Inicialmente, mostrar o botão de pausar
+        function showPauseButton() {
+            pauseButton.style.display = 'inline-block';
+            resumeButton.style.display = 'none';
+        }
+
+        // Mostrar o botão de retomar
+        function showResumeButton() {
+            pauseButton.style.display = 'none';
+            resumeButton.style.display = 'inline-block';
+        }
+
+        pauseButton.addEventListener('click', () => {
+            isPaused = true;
+            if (currentAudio) {
+                currentAudio.pause();
+            }
+            showResumeButton();
+        });
+
+        resumeButton.addEventListener('click', () => {
+            isPaused = false;
+            if (currentAudio) {
+                currentAudio.play();
+            }
+            showPauseButton();
+        });
+
+        // Função para reproduzir um único áudio e aguardar seu término
+        function playAudio(src) {
+            return new Promise((resolve, reject) => {
+                currentAudio = new Audio(src);
+                currentAudio.play();
+                currentAudio.onended = () => {
+                    currentAudio = null;
+                    resolve();
+                };
+                currentAudio.onerror = reject;
+            });
+        }
+
+        // Função para dividir o texto em segmentos de até 7 palavras ou até o ponto final
+        function splitText(text) {
+            const sentences = text.match(/[^.!?]+[.!?]?/g);
+            let segments = [];
+            sentences.forEach(sentence => {
+                const words = sentence.trim().split(/\s+/);
+                for (let i = 0; i < words.length; i += 7) {
+                    let segment = words.slice(i, i + 7).join(' ');
+                    // Se o segmento não termina com pontuação, adiciona "..."
+                    if (!/[.!?]$/.test(segment)) {
+                        segment += '...';
+                    }
+                    segments.push(segment);
+                }
+            });
+            return segments;
+        }
+
+        // Função para exibir as legendas sequencialmente com tempo ajustável
+        async function displayCaptions(text, displayTime = 3000) {
+            const captionsDiv = document.getElementById('captions');
+            captionSegments = splitText(text);
+            currentCaptionIndex = 0;
+            captionsDiv.style.display = 'block';
+
+            while (currentCaptionIndex < captionSegments.length) {
+                if (isPaused) {
+                    await new Promise(resolve => {
+                        const interval = setInterval(() => {
+                            if (!isPaused) {
+                                clearInterval(interval);
+                                resolve();
+                            }
+                        }, 500);
+                    });
+                }
+                captionsDiv.innerText = captionSegments[currentCaptionIndex];
+                currentCaptionIndex++;
+                await new Promise(resolve => setTimeout(resolve, displayTime)); // Exibe cada segmento por displayTime milissegundos
+            }
+
+            // Limpa as legendas após a exibição
+            captionsDiv.innerText = '';
+            captionsDiv.style.display = 'none';
+        }
+
+        // Função para exibir e narrar cada etapa com legendas
+        async function displayResultStep(sectionId, title, introAudio, captionText, numberText, number, numberAudio, description, descriptionAudio) {
+            const section = document.getElementById(sectionId);
+            const titleElement = document.getElementById(`${sectionId}Title`);
+            const introElement = document.getElementById(`${sectionId}Intro`);
+            const numberTextElement = document.getElementById(`${sectionId}NumberText`);
+            const numberDisplayElement = document.getElementById(`${sectionId}NumberDisplay`);
+            const descriptionElement = document.getElementById(`${sectionId}Description`);
+
+            // Ocultar texto superior
+            document.getElementById('textHeader').style.display = 'none';
+
+            // Exibir título
+            titleElement.innerText = title;
+            section.style.display = 'block';
+
+            // Exibir circulo
+            document.getElementById('boxCircle').style.display = 'block';
+            document.getElementById('boxCircle').style.opacity = 1;
+
+            // Iniciar a reprodução do áudio introdutório e exibir as legendas simultaneamente
+            isFinalText = false;
+            showPauseButton(); // Mostrar o botão de pausar
+            const introPromise = playAudio(introAudio);
+            const captionsPromise = displayCaptions(captionText);
+
+            try {
+                await Promise.all([introPromise, captionsPromise]);
+            } catch (error) {
+                console.error("Erro ao reproduzir o áudio introdutório ou exibir legendas:", error);
+            }
+
+            // Ocultar título após o áudio introdutório
+            titleElement.innerText = '';
+
+            // Ocultar circulo
+            document.getElementById('boxCircle').style.opacity = 0;
+
+            // Exibir texto "Seu número ... é"
+            introElement.innerText = numberText;
+            await playAudio(numberAudio);
+
+            // Exibir número em grande e negrito
+            numberDisplayElement.innerText = number;
+            await playAudio(`audios/${number}.ogg`);
+
+            // Remover o número da tela
+            numberDisplayElement.innerText = '';
+
+            // Remover o texto "Seu número ... é"
+            introElement.innerText = '';
+
+            // Exibir descrição
+            descriptionElement.innerText = description;
+            await playAudio(descriptionAudio);
+
+            // Remover a descrição após o áudio
+            descriptionElement.innerText = '';
+
+            // Ocultar a seção atual antes de passar para a próxima
+            section.style.display = 'none';
+        }
+
+        // Função para exibir o texto final aleatório com legendas e áudio
+        async function displayFinalText() {
+            const finalTextObj = finalTexts[Math.floor(Math.random() * finalTexts.length)];
+            const text = finalTextObj.text;
+            const audioSrc = finalTextObj.audio;
+
+            // Escolher uma displayTime mais adequado para final captions
+            const finalDisplayTime = 2000; // 2 segundos por segmento
+
+            // Exibir e reproduzir o texto final com legendas
+            const captionsDiv = document.getElementById('captions');
+            captionSegments = splitText(text);
+            currentCaptionIndex = 0;
+            captionsDiv.style.display = 'block';
+
+            // Exibir Circulo
+
+            document.getElementById('boxCircle').style.opacity = 1;
+
+            // Iniciar reprodução do áudio final
+            currentAudio = new Audio(audioSrc);
+            currentAudio.play();
+
+            // Habilitar os botões de pausa
+            showPauseButton(); // Mostrar o botão de pausar
+
+            while (currentCaptionIndex < captionSegments.length) {
+                if (isPaused) {
+                    await new Promise(resolve => {
+                        const interval = setInterval(() => {
+                            if (!isPaused) {
+                                clearInterval(interval);
+                                resolve();
+                            }
+                        }, 500);
+                    });
+                }
+                captionsDiv.innerText = captionSegments[currentCaptionIndex];
+                currentCaptionIndex++;
+                await new Promise(resolve => setTimeout(resolve, 2400)); // Exibe cada segmento por finalDisplayTime milissegundos
+            }
+
+            // Esperar o término do áudio final
+            await new Promise((resolve, reject) => {
+                currentAudio.onended = resolve;
+                currentAudio.onerror = reject;
+            });
+
+            // Limpa as legendas após a exibição
+            captionsDiv.innerText = '';
+            captionsDiv.style.display = 'none';
+            currentAudio = null;
+
+            // Ocultar circulo
+
+            document.getElementById('boxCircle').style.opacity = 0;
+            document.getElementById('boxCircle').style.display = 'none';
+
+            // Exibir o botão "Desbloquear minha prosperidade"
+            unlockButton.style.display = 'inline-block';
+
+            // Ocultar os botões de pausar e retomar
+            pauseButton.style.display = 'none';
+            resumeButton.style.display = 'none';
+        }
+
+        // Função para exibir e narrar todos os resultados
+        async function displayAllResults(lifePath, expression, soulUrge, personality) {
+            // Número do Caminho de Vida
+            await displayResultStep(
+                'lifePathSection',
+                'Número do Caminho de Vida',
+                'audios/numero_caminho_de_vida.ogg', // áudio introdutório
+                sectionTexts.lifePath.join(' '), // texto para legendas
+                'Seu número do Caminho de Vida é',
+                lifePath,
+                'audios/lifePathSectionIntro.ogg', // áudio "Seu número do Caminho de Vida é"
+                numerologyDescriptions.lifePath[lifePath] || "Descrição não disponível.",
+                `audios/lp${lifePath}.ogg` // áudio da descrição
+            );
+
+            // Número de Expressão
+            await displayResultStep(
+                'expressionSection',
+                'Número de Expressão',
+                'audios/numero_de_expressao.ogg', // áudio introdutório
+                sectionTexts.expression.join(' '), // texto para legendas
+                'Seu número de Expressão é',
+                expression,
+                'audios/expressionSectionIntro.ogg', // áudio "Seu número de Expressão é"
+                numerologyDescriptions.expression[expression] || "Descrição não disponível.",
+                `audios/e${expression}.ogg` // áudio da descrição
+            );
+
+            // Número do Desejo da Alma
+            await displayResultStep(
+                'soulUrgeSection',
+                'Número do Desejo da Alma',
+                'audios/numero_do_desejo_da_alma.ogg', // áudio introdutório
+                sectionTexts.soulUrge.join(' '), // texto para legendas
+                'Seu número do Desejo da Alma é',
+                soulUrge,
+                'audios/soulUrgeSectionIntro.ogg', // áudio "Seu número do Desejo da Alma é"
+                numerologyDescriptions.soulUrge[soulUrge] || "Descrição não disponível.",
+                `audios/su${soulUrge}.ogg` // áudio da descrição
+            );
+
+            // Número da Personalidade
+            await displayResultStep(
+                'personalitySection',
+                'Número da Personalidade',
+                'audios/numero_da_personalidade.ogg', // áudio introdutório
+                sectionTexts.personality.join(' '), // texto para legendas
+                'Seu número da Personalidade é',
+                personality,
+                'audios/personalitySectionIntro.ogg', // áudio "Seu número da Personalidade é"
+                numerologyDescriptions.personality[personality] || "Descrição não disponível.",
+                `audios/person${personality}.ogg` // áudio da descrição
+            );
+
+            // Exibir o texto final aleatório
+            await displayFinalText();
+        }
+
+        document.getElementById('numerologyForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('fullName').value.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Remove acentos
+            const day = parseInt(document.getElementById('birthDay').value);
+            const month = parseInt(document.getElementById('birthMonth').value);
+            const year = parseInt(document.getElementById('birthYear').value);
+
+            if (!day || !month || !year) {
+                alert("Por favor, preencha a data de nascimento corretamente.");
+                return;
+            }
+
+            const lifePath = calculateLifePathNumber(day, month, year);
+            const expression = calculateExpressionNumber(name);
+            const soulUrge = calculateSoulUrgeNumber(name);
+            const personality = calculatePersonalityNumber(name);
+            
+            // Ocultar o formulário
+            document.getElementById('numerologyForm').style.display = 'none';
+
+            try {
+                await displayAllResults(lifePath, expression, soulUrge, personality);
+            } catch (error) {
+                console.error("Erro durante a apresentação:", error);
+                alert("Ocorreu um erro durante a apresentação. Por favor, tente novamente.");
+            }
+        });
+
+        // Função para desbloquear a prosperidade (direciona para a URL especificada)
+        unlockButton.addEventListener('click', () => {
+            window.location.href = 'https://centralguia.github.io/101/';
+        });
+
+        // Funções de cálculo
+        function calculateLifePathNumber(day, month, year) {
+            const digits = [...day.toString(), ...month.toString(), ...year.toString()].map(Number);
+            const sum = digits.reduce((a, b) => a + b, 0);
+            return reduceNumber(sum);
+        }
+
+        function calculateExpressionNumber(name) {
+            let sum = 0;
+            const upperName = name.toUpperCase();
+            for (let char of upperName) {
+                if (letterToNumber[char]) {
+                    sum += letterToNumber[char];
+                }
+            }
+            return reduceNumber(sum);
+        }
+
+        function calculateSoulUrgeNumber(name) {
+            const vowels = ['A', 'E', 'I', 'O', 'U'];
+            let sum = 0;
+            const upperName = name.toUpperCase();
+            for (let char of upperName) {
+                if (vowels.includes(char) && letterToNumber[char]) {
+                    sum += letterToNumber[char];
+                }
+            }
+            return reduceNumber(sum);
+        }
+
+        function calculatePersonalityNumber(name) {
+            const vowels = ['A', 'E', 'I', 'O', 'U'];
+            let sum = 0;
+            const upperName = name.toUpperCase();
+            for (let char of upperName) {
+                if (!vowels.includes(char) && letterToNumber[char]) {
+                    sum += letterToNumber[char];
+                }
+            }
+            return reduceNumber(sum);
+        }
+
+        // Função de redução de número
+        function reduceNumber(num) {
+            // Verifica se o número é um número mestre
+            if ([11, 22, 33].includes(num)) {
+                return num;
+            }
+            while (num > 9) {
+                num = num.toString().split('').reduce((a, b) => a + parseInt(b), 0);
+                if ([11, 22, 33].includes(num)) {
+                    return num;
+                }
+            }
+            return num;
+        }
+    </script>
+</body>
+</html>
